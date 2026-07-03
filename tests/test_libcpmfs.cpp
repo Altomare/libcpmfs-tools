@@ -7,17 +7,6 @@
 #include "disk_definitions.hh"
 #include "floppy_utils.hh"
 
-struct cpm_fs_attr otrona_attrs = {
-    .cylinders = 40,
-    .heads = 2,
-    .sector_count = 10,
-    .sector_size = 512,
-    .block_size = 2048,
-    .max_dir_entries = 128,
-    .boot_cylinders = 0,
-    .skip_first_cylinders = 3,
-};
-
 #define CHECK_LIBCPMFS(call)                                                   \
   {                                                                            \
     enum cpm_fs_status status = call;                                          \
@@ -101,12 +90,6 @@ TEST_P(BasicTest, ReadFiles) {
   CHECK_LIBCPMFS(cpm_fs_destroy(fs));
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    CpmFloppyGauntlet, BasicTest, testing::Values(&OtronaAttache, &Bondwell12),
-    [](const testing::TestParamInfo<DiskSettings *> &info) {
-      return info.param->name_;
-    });
-
 /* Delete every file then write a very big one then read back and check.
  * File has a size of 131k (256 * 512) */
 TEST_P(BasicTest, WriteReadBack) {
@@ -117,6 +100,8 @@ TEST_P(BasicTest, WriteReadBack) {
   uint8_t buf[512];
   size_t c_read;
   size_t c_written;
+  size_t disk_size;
+  int to_write;
 
   CHECK_LIBCPMFS(cpm_fs_new(&settings_->attrs_, &cpm_get_sector,
                             &cpm_set_sector, image_->userdata(), &fs));
@@ -130,25 +115,42 @@ TEST_P(BasicTest, WriteReadBack) {
   }
   CHECK_LIBCPMFS(cpm_fs_closedir(fs, dirp));
 
+  /* Get available disk capacity */
+  CHECK_LIBCPMFS(cpm_fs_get_available_space(fs, &disk_size));
+  to_write = (disk_size / 512) - 1;
+
   /* Write */
   CHECK_LIBCPMFS(cpm_fs_open(fs, "testfil.tst", CPM_MODE_RDWR, 7, &f));
-  for (int i = 0; i < 256; ++i) {
+  for (int i = 0; i < to_write; ++i) {
     buf[0] = 'A' + (i % 26);
     CHECK_LIBCPMFS(cpm_fs_write(fs, f, buf, 512, &c_written));
     ASSERT_EQ(c_written, (size_t)512);
   }
   CHECK_LIBCPMFS(cpm_fs_close(fs, f));
 
+  /* Expect no space left */
+  CHECK_LIBCPMFS(cpm_fs_get_available_space(fs, &disk_size));
+  ASSERT_EQ(disk_size, (size_t)0);
+
   /* Read back and check values */
   CHECK_LIBCPMFS(cpm_fs_open(fs, "testfil.tst", CPM_MODE_RDONLY, 7, &f));
-  for (int i = 0; i < 135; ++i) {
+  for (int i = 0; i < to_write; ++i) {
     CHECK_LIBCPMFS(cpm_fs_read(fs, f, buf, 512, &c_read));
     ASSERT_EQ(buf[0], 'A' + (i % 26));
   }
   CHECK_LIBCPMFS(cpm_fs_close(fs, f));
 
+
   CHECK_LIBCPMFS(cpm_fs_destroy(fs));
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    CpmDiskTests, BasicTest,
+    testing::Values(&OtronaAttache, &Bondwell12, &Sanco8003, &Osborne1,
+                    &EpsonQX10),
+    [](const testing::TestParamInfo<DiskSettings *> &info) {
+      return info.param->name_;
+    });
 
 } // namespace
 

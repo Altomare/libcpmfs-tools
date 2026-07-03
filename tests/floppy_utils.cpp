@@ -34,13 +34,13 @@ int HxCFloppyImage::read_sector(uint32_t cylinder, uint32_t head,
 
   if (settings_.first_sector_ == 0)
     sector -= 1;
+  //TODO: this should number from index pulse instead of using header.
   hxcfe_readSectorData(sector_access_, cylinder, head, sector, 1,
                        settings_.attrs_.sector_size, settings_.encoding_,
                        out_sector, &status);
 
   if (status == FDC_NOERROR)
     return 0;
-  printf("status=%d\n", status);
   return -1;
 }
 
@@ -74,6 +74,7 @@ void HxCFloppyImage::reset_disk(void) {
 HxCFloppyImage::~HxCFloppyImage() {
   hxcfe_deinitSectorAccess(sector_access_);
   hxcfe_imgUnload(loader_, floppy_);
+  hxcfe_imgUnload(loader_, floppy_ref_);
   hxcfe_imgDeInitLoader(loader_);
   hxcfe_deinit(hxcfe_);
 }
