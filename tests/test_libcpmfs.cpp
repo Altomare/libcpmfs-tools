@@ -144,10 +144,17 @@ TEST_P(BasicTest, WriteReadBack) {
   CHECK_LIBCPMFS(cpm_fs_destroy(fs));
 }
 
+/* Zorba is not working yet due to sector numbering */
 INSTANTIATE_TEST_SUITE_P(
     CpmDiskTests, BasicTest,
-    testing::Values(&OtronaAttache, &Bondwell12, &Sanco8003, &Osborne1,
-                    &EpsonQX10),
+    testing::Values(
+      &Bondwell12,
+      &EpsonQX10,
+      &MaiBasicFour,
+      &Osborne1,
+      &OsborneVixen,
+      &OtronaAttache,
+      &Sanco8003),
     [](const testing::TestParamInfo<DiskSettings *> &info) {
       return info.param->name_;
     });

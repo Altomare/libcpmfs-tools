@@ -25,3 +25,6 @@ extern DiskSettings Bondwell12;
 extern DiskSettings Osborne1;
 extern DiskSettings EpsonQX10;
 extern DiskSettings Sanco8003;
+extern DiskSettings OsborneVixen;
+extern DiskSettings Zorba;
+extern DiskSettings MaiBasicFour;
