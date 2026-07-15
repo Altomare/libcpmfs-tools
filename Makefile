@@ -32,7 +32,7 @@ libcpmfs:
 
 hxc:
 	@echo "Build libhxcfe"
-	@$(MAKE) -C hxc/build/ libhxcfe.so
+	@$(MAKE) -C hxc/build/ libhxcfe
 
 gtest:
 	@echo "Build gtest"

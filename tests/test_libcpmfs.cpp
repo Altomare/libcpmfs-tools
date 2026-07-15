@@ -154,7 +154,8 @@ INSTANTIATE_TEST_SUITE_P(
       &Osborne1,
       &OsborneVixen,
       &OtronaAttache,
-      &Sanco8003),
+      &Sanco8003,
+      &Zorba),
     [](const testing::TestParamInfo<DiskSettings *> &info) {
       return info.param->name_;
     });
