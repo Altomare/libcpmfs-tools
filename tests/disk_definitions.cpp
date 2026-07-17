@@ -18,7 +18,7 @@ DiskSettings OtronaAttache(
     .max_dir_entries = 128,
     .skew_table = otrona_attache_skew,
     .boot_cylinders = 3,
-    .hcs_fill = 1,
+    .fill_order = CPM_FILL_HCS,
   },
   "disks/otrona.td0",
   ISOIBM_MFM_ENCODING);
@@ -37,7 +37,7 @@ DiskSettings Bondwell12(
     .max_dir_entries = 64,
     .skew_table = bondwell_12_skew,
     .boot_cylinders = 2,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/bondwl12.td0",
   ISOIBM_MFM_ENCODING);
@@ -54,7 +54,7 @@ DiskSettings Osborne1(
     .max_dir_entries = 64,
     .skew_table = osborne_1_skew,
     .boot_cylinders = 3,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/osborne_1_bootable.td0",
   ISOIBM_FM_ENCODING);
@@ -71,7 +71,7 @@ DiskSettings EpsonQX10(
     .max_dir_entries = 128,
     .skew_table = epson_qx10_skew,
     .boot_cylinders = 4,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/epson_qx10_cpm2.2.td0",
   ISOIBM_MFM_ENCODING);
@@ -88,7 +88,7 @@ DiskSettings Sanco8003(
     .max_dir_entries = 128,
     .skew_table = sanco_8003_skew,
     .boot_cylinders = 2,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/SANCO8003_CPM_2.2fr.dsqd.hfe",
   ISOIBM_MFM_ENCODING);
@@ -105,7 +105,7 @@ DiskSettings OsborneVixen(
     .max_dir_entries = 128,
     .skew_table = osborne_vixen_skew,
     .boot_cylinders = 2,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/osborne_vixen_bootable.td0",
   ISOIBM_MFM_ENCODING);
@@ -121,7 +121,7 @@ DiskSettings MaiBasicFour(
     .max_dir_entries = 128,
     .skew_table = NULL,
     .boot_cylinders = 3,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/MAI4CPM.IMD",
   ISOIBM_MFM_ENCODING);
@@ -137,7 +137,7 @@ DiskSettings Zorba(
     .max_dir_entries = 64,
     .skew_table = NULL,
     .boot_cylinders = 2,
-    .hcs_fill = 0,
+    .fill_order = CPM_FILL_NORMAL,
   },
   "disks/ZORBA1.IMD",
   ISOIBM_MFM_ENCODING);

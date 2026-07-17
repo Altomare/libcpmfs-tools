@@ -53,6 +53,11 @@ Contrary to other disks, the block order is in HCS instead of CHS. This means th
 
 ## Zorba
 
+* Side ID is not set in headers (always zero)
+* Sectors are numbered 1 to 10 on side 0, and 11 to 20 on side 1
+* 2 reserved tracks
+
+```
 CYLINDERS 40
 SIDES 2
 SECTORS 10,512
@@ -61,13 +66,8 @@ SIDE1 0 1,2,3,4,5,6,7,8,9,10
 SIDE2 0 11,12,13,14,15,16,17,18,19,20
 ORDER SIDES
 BSH 4 BLM 15 EXM 1 DSM 194 DRM 63 AL0 080H AL1 0 OFS 2
+```
 
-
-2 reserved tracks on first side.
-Physical sector numbers are consecutive on side 2
-
-Disk is filled in CHS order
-s
 ## Sanco
 
 First track of side 0, 16 sector of 256 bytes. Rest is 5 * 1024.
