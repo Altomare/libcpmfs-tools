@@ -18,7 +18,7 @@ Values can be:
 
 ## ORDER
 
-22disk has an `ORDER` parameter:
+22DISK has an `ORDER` parameter:
 * `SIDES`: specifies that first one side then the other is written/read
       before the cylinder number is advanced.
 * `CYLINDERS`: specifies that all tracks on the first side are recorded
@@ -28,9 +28,6 @@ Values can be:
       track.
 * `COLUMBIA`: same as CYLINDERS except tracks are sequential from side
       0 to side 1 ie. 0 - 79 for a 40 track disk.
-* `EVEN`:-ODD means side 0 contains even-numbered tracks and side 1
+* `EVEN-ODD` means side 0 contains even-numbered tracks and side 1
       contains odd-numbered tracks. 
 * `SKIP`: means skip the first Single Density Track
-
-In some definitions, `ORDER SIDES` is also followed by `EVEN-ODD` or `LABEL XXX`.
-I'm not sure what's up with that.
