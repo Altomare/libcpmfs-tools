@@ -3,7 +3,22 @@
 
 #include "floppy_utils.hh"
 
+#include <stdarg.h>
 #include <stdexcept>
+
+extern "C" int32_t hxcfe_print_cb(int32_t type, const char *string, ...) {
+  va_list marker;
+
+  if (type != MSG_WARNING && type != MSG_ERROR)
+    return 0;
+  va_start(marker, string);
+
+  vprintf(string, marker);
+  printf("\n");
+
+  va_end(marker);
+  return 0;
+}
 
 HxCFloppyImage::HxCFloppyImage(DiskSettings &settings) : settings_(settings) {
 
@@ -25,29 +40,32 @@ HxCFloppyImage::HxCFloppyImage(DiskSettings &settings) : settings_(settings) {
   if (!floppy_ref_ || ret != 0)
     throw std::runtime_error("hxcfe_imgLoad");
 
+  /* Set logging after autoselect+load as these functions generate many logs */
+  hxcfe_setOutputFunc(hxcfe_, hxcfe_print_cb);
+
   sector_access_ = NULL;
 }
 
-static int get_index_for_id(HXCFE* hxcfe, HXCFE_SECTORACCESS* sector_access, uint32_t cylinder, uint32_t head, int32_t sector, int type)
-{
-  HXCFE_SECTCFG * sc;
+static int get_index_for_id(HXCFE *hxcfe, HXCFE_SECTORACCESS *sector_access,
+                            uint32_t cylinder, uint32_t head, int32_t sector,
+                            int type) {
+  HXCFE_SECTCFG *sc;
   int i = 0;
 
   hxcfe_resetSearchTrackPosition(sector_access);
-  do
-  {
-    sc = hxcfe_getNextSector(sector_access,cylinder,head,type);
-    if( sc )
-    {
-      if( i == sector ) {
+  do {
+    sc = hxcfe_getNextSector(sector_access, cylinder, head, type);
+    if (sc) {
+      if (i == sector) {
         i = hxcfe_getSectorConfigSectorID(hxcfe, sc);
-        hxcfe_freeSectorConfig(sector_access,sc);
+        hxcfe_freeSectorConfig(sector_access, sc);
         return i;
       }
 
-      hxcfe_freeSectorConfig(sector_access,sc);
+      hxcfe_freeSectorConfig(sector_access, sc);
       i++;
-}  }while( sc );
+    }
+  } while (sc);
   return 0;
 }
 
@@ -55,7 +73,8 @@ int HxCFloppyImage::read_sector(uint32_t cylinder, uint32_t head,
                                 uint32_t sector, uint8_t *out_sector) const {
   int status;
 
-  sector = get_index_for_id(hxcfe_, sector_access_, cylinder, head, sector, settings_.encoding_);
+  sector = get_index_for_id(hxcfe_, sector_access_, cylinder, head, sector,
+                            settings_.encoding_);
   hxcfe_readSectorData(sector_access_, cylinder, head, sector, 1,
                        settings_.attrs_.sector_size, settings_.encoding_,
                        out_sector, &status);
@@ -69,7 +88,8 @@ int HxCFloppyImage::write_sector(uint32_t cylinder, uint32_t head,
                                  uint32_t sector, const uint8_t *in_sector) {
   int status;
 
-  sector = get_index_for_id(hxcfe_, sector_access_, cylinder, head, sector, settings_.encoding_);
+  sector = get_index_for_id(hxcfe_, sector_access_, cylinder, head, sector,
+                            settings_.encoding_);
   hxcfe_writeSectorData(sector_access_, cylinder, head, sector, 1,
                         settings_.attrs_.sector_size, settings_.encoding_,
                         (uint8_t *)in_sector, &status);
