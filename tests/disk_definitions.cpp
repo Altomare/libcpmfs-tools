@@ -141,3 +141,20 @@ DiskSettings Zorba(
   },
   "disks/ZORBA1.IMD",
   ISOIBM_MFM_ENCODING);
+
+
+DiskSettings NorthstarAdvantage(
+  "Northstar_Advantage",
+  {
+    .cylinders = 35,
+    .heads = 1,
+    .sector_count = 10,
+    .sector_size = 512,
+    .block_size = 2048,
+    .max_dir_entries = 64,
+    .skew_table = NULL,
+    .boot_cylinders = 2,
+    .fill_order = CPM_FILL_NORMAL,
+  },
+  "disks/northstar_advantage_cpm_basic.nsi",
+  NORTHSTAR_HS_MFM_ENCODING);

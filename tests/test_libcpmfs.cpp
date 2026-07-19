@@ -151,6 +151,7 @@ INSTANTIATE_TEST_SUITE_P(
       &Bondwell12,
       &EpsonQX10,
       &MaiBasicFour,
+      &NorthstarAdvantage,
       &Osborne1,
       &OsborneVixen,
       &OtronaAttache,

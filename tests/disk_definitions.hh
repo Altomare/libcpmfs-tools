@@ -25,3 +25,4 @@ extern DiskSettings Sanco8003;
 extern DiskSettings OsborneVixen;
 extern DiskSettings Zorba;
 extern DiskSettings MaiBasicFour;
+extern DiskSettings NorthstarAdvantage;
