@@ -9,7 +9,7 @@
 
 #include "disk_definitions.h"
 
-
+static uint32_t micral_p2_skew[16] = {1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15, 8, 16};
 struct disk_definition micral_p2 = {
 	.shortname = "micral_p2",
 	.name = "Bull Micral P2",
@@ -20,6 +20,7 @@ struct disk_definition micral_p2 = {
 		.sector_size = 256,
 		.block_size = 2048,
 		.max_dir_entries = 256,
+		.skew_table = micral_p2_skew,
 		.boot_cylinders = 3,
 		.fill_order = CPM_FILL_NORMAL,
 	},

@@ -13,7 +13,13 @@ CFLAGS := \
 	-IHXC/include \
 	-Ilibcpmfs/include
 
-TOOLS_SRC := tools/main.c tools/disk_definitions.c tools/floppy.c tools/ls.c tools/extract.c
+TOOLS_SRC := tools/main.c \
+	     tools/disk_definitions.c \
+	     tools/floppy.c \
+	     tools/rm.c \
+	     tools/ls.c \
+	     tools/extract.c \
+	     tools/wipe_unused_sectors.c
 TOOLS_BIN := cpmfstools
 
 TEST_SRC := \

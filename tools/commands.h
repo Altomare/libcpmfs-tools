@@ -5,3 +5,5 @@
 
 int ls(int argc, char *argv[]);
 int extract(int argc, char *argv[]);
+int wipe_unused_sectors(int argc, char *argv[]);
+int rm(int argc, char *argv[]);

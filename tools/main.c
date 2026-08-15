@@ -31,6 +31,14 @@ static struct command cmds[] = {
 		.name = "list_formats",
 		.func = &list_formats,
 	},
+	{
+		.name = "rm",
+		.func = &rm,
+	},
+	{
+		.name = "wipe_unused_sectors",
+		.func = &wipe_unused_sectors,
+	},
 };
 
 static void usage(const char *name)

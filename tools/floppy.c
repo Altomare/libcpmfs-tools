@@ -15,6 +15,8 @@ static struct {
 	HXCFE_IMGLDR *loader;
 	HXCFE_SECTORACCESS *sector_access;
 
+	int32_t module_id;
+
 	const struct disk_definition *def;
 } ctx;
 
@@ -85,7 +87,6 @@ int write_sector(void *userdata, uint32_t c, uint32_t h, uint32_t s, uint8_t *in
 
 int init_floppy(char *filename, const struct disk_definition *diskdef)
 {
-	int loader_id;
 	int ret;
 
 	if (!filename || !diskdef)
@@ -100,8 +101,8 @@ int init_floppy(char *filename, const struct disk_definition *diskdef)
 	if (!ctx.loader)
 		return -1;
 
-	loader_id = hxcfe_imgAutoSetectLoader(ctx.loader, filename, 0);
-	ctx.floppy = hxcfe_imgLoad(ctx.loader, filename, loader_id, &ret);
+	ctx.module_id = hxcfe_imgAutoSetectLoader(ctx.loader, filename, 0);
+	ctx.floppy = hxcfe_imgLoad(ctx.loader, filename, ctx.module_id, &ret);
 	if (!ctx.floppy || ret != 0)
 		return -1;
 
@@ -117,6 +118,11 @@ int init_floppy(char *filename, const struct disk_definition *diskdef)
 	hxcfe_setSectorAccessFlags(ctx.sector_access, SECTORACCESS_IGNORE_SIDE_ID);
 
 	return 0;
+}
+
+int save_floppy(char *filename)
+{
+	return hxcfe_imgExport(ctx.loader, ctx.floppy, "toto.imd", ctx.module_id);
 }
 
 void destroy_floppy(void)
