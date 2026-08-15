@@ -19,7 +19,7 @@ TOOLS_SRC := tools/main.c \
 	     tools/rm.c \
 	     tools/ls.c \
 	     tools/extract.c \
-	     tools/wipe_unused_sectors.c
+	     tools/cleanup.c
 TOOLS_BIN := cpmfstools
 
 TEST_SRC := \

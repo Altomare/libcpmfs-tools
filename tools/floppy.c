@@ -122,7 +122,7 @@ int init_floppy(char *filename, const struct disk_definition *diskdef)
 
 int save_floppy(char *filename)
 {
-	return hxcfe_imgExport(ctx.loader, ctx.floppy, "toto.imd", ctx.module_id);
+	return hxcfe_imgExport(ctx.loader, ctx.floppy, filename, ctx.module_id);
 }
 
 void destroy_floppy(void)

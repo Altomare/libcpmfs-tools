@@ -36,16 +36,28 @@ static struct command cmds[] = {
 		.func = &rm,
 	},
 	{
-		.name = "wipe_unused_sectors",
-		.func = &wipe_unused_sectors,
+		.name = "cleanup",
+		.func = &cleanup,
 	},
 };
 
 static void usage(const char *name)
 {
-	fprintf(stderr, "Usage: %s <command> <arguments>\n", name);
-	fprintf(stderr, "Commands: ls -t <format> <image>\n");
-	fprintf(stderr, "          extract -t <format> <image>\n");
+	fprintf(stderr,
+		"Set of tools to manipulate CP/M floppy disk image files.\n"
+		"\n"
+		"Usage: %s <command> <arguments>\n"
+		"\n"
+		"Available commands:\n"
+		"    ls                   List files\n"
+		"    extract              Extract all files\n"
+		"    rm                   Delete specified files\n"
+		"    cleanup              Cleanup unused sectors\n"
+		"    list_formats         List available disk formats\n"
+		"\n"
+		"For more details on a command, run:\n"
+		"    %s <command> --help\n"
+		, name, name);
 }
 
 int main(int argc, char *argv[])

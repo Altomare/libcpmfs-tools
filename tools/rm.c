@@ -44,13 +44,15 @@ static void print_usage_exit(void)
 
 int rm(int argc, char *argv[])
 {
-	const char opts[] = "f:u:i:";
+	const char opts[] = "f:u:i:o:";
 	const struct option long_opts[] = {
 		{"format", required_argument, 0, 'f'},
 		{"user", required_argument, 0, 'u'},
 		{"image", required_argument, 0, 'i'},
+		{"output", required_argument, 0, 'o'},
 		{0, 0, 0, 0}};
 	char path[1024 + 1] = {0};
+	char output[1024 + 1] = {0};
 	char format[128] = {0};
 	struct disk_definition *def;
 	int user = 0;
@@ -61,6 +63,10 @@ int rm(int argc, char *argv[])
 		case 'i':
 			printf("File = %s\n", optarg);
 			strncpy(path, optarg, 1024);
+			break;
+		case 'o':
+			printf("File = %s\n", optarg);
+			strncpy(output, optarg, 1024);
 			break;
 		case 'f':
 			printf("Format = %s\n", optarg);
@@ -79,6 +85,9 @@ int rm(int argc, char *argv[])
 	if (!path[0] || !format[0] || optind >= argc)
 		print_usage_exit();
 
+	if (!output[0])
+		memcpy(output, path, 1024);
+
 	def = find_definition(format);
 	if (!def)
 		return -1;
@@ -88,10 +97,10 @@ int rm(int argc, char *argv[])
 		return -1;
 	}
 
-	for (;optind < argc; ++optind)
+	for (; optind < argc; ++optind)
 		cpmrm(def, argv[optind], user);
 
-	save_floppy("toto.imd");
+	save_floppy(output);
 	destroy_floppy();
 
 	return 0;

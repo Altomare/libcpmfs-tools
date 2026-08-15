@@ -12,7 +12,7 @@
 #include "commands.h"
 #include "floppy.h"
 
-static int cpmls(struct disk_definition *def)
+static int wipe_sectors(struct disk_definition *def)
 {
 	struct cpm_fs_dir *dirp;
 	struct cpm_fs *fs;
@@ -27,20 +27,11 @@ static int cpmls(struct disk_definition *def)
 	if (status != CPM_SUCCESS)
 		goto end;
 
-	struct cpm_fs_file *cpmfile;
-	cpm_fs_readdir(fs, dirp, &cpmfile);
-	while (cpmfile) {
-		printf("%12s [%d][%c%c%c][%u bytes]\n",
-		       cpmfile->d_name,
-		       cpmfile->d_user,
-		       cpmfile->d_flags & CPM_FS_FLAG_SYSTEM ? 'S' : ' ',
-		       cpmfile->d_flags & CPM_FS_FLAG_READONLY ? 'R' : ' ',
-		       cpmfile->d_flags & CPM_FS_FLAG_ARCHIVED ? 'A' : ' ',
-		       cpmfile->d_size);
-		cpm_fs_readdir(fs, dirp, &cpmfile);
-	}
-	cpm_fs_closedir(fs, dirp);
+	status = cpm_fs_wipe_unused_sectors(fs);
+	if (status != CPM_SUCCESS)
+		goto end;
 
+	status = cpm_fs_sync(fs);
 	cpm_fs_destroy(fs);
 
 end:
@@ -51,41 +42,47 @@ end:
 
 static void print_usage_exit(const char *name)
 {
-	printf("List files in given CP/M disk image.\n"
+	printf("Wipe every unused sector in given file with 0xE5.\n"
 	       "\n"
 	       "Usage: %s <options>\n"
 	       "\n"
 	       "Options:\n"
 	       "    -f,--format <format>   Target CP/M format (mandatory)\n"
 	       "    -i,--image <path>      Input image file (mandatory)\n"
+	       "    -o,--output <path>     Output file. Overrides input file by default\n"
 	       "    -h,--help              Displays this message\n",
 	       name);
 	exit(EXIT_FAILURE);
 }
 
-int ls(int argc, char *argv[])
+int cleanup(int argc, char *argv[])
 {
-	const char opts[] = "f:i:h";
+	const char opts[] = "f:i:o:h";
 	const struct option long_opts[] = {
 		{"format", required_argument, 0, 'f'},
 		{"image", required_argument, 0, 'i'},
+		{"output", required_argument, 0, 'o'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}};
 	char path[1024 + 1] = {0};
+	char output[1024 + 1] = {0};
 	char format[128] = {0};
 	struct disk_definition *def;
 	int opt;
 
 	while ((opt = getopt_long(argc, argv, opts, long_opts, NULL)) != -1) {
 		switch (opt) {
+		case 'h':
+			print_usage_exit(argv[0]);
+			break;
 		case 'i':
 			strncpy(path, optarg, 1024);
 			break;
+		case 'o':
+			strncpy(output, optarg, 1024);
+			break;
 		case 'f':
 			strncpy(format, optarg, 1024);
-			break;
-		case 'h':
-			print_usage_exit(argv[0]);
 			break;
 		default:
 			print_usage_exit(argv[0]);
@@ -102,9 +99,11 @@ int ls(int argc, char *argv[])
 		fprintf(stderr, "Missing format\n");
 		exit(EXIT_FAILURE);
 	}
-
 	if (optind > argc)
 		print_usage_exit(argv[0]);
+
+	if (!output[0])
+		memcpy(output, path, 1024);
 
 	def = find_definition(format);
 	if (!def)
@@ -115,8 +114,9 @@ int ls(int argc, char *argv[])
 		return -1;
 	}
 
-	cpmls(def);
+	wipe_sectors(def);
 
+	save_floppy("toto.imd");
 	destroy_floppy();
 
 	return 0;
