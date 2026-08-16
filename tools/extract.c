@@ -71,7 +71,8 @@ static int cpmextract(struct disk_definition *def)
 	struct cpm_fs *fs;
 	int status;
 
-	status = cpm_fs_new(&def->attrs, &read_sector, &write_sector, NULL, &fs);
+	status =
+		cpm_fs_new(&def->attrs, &read_sector, &write_sector, NULL, &fs);
 	if (status)
 		goto end;
 
@@ -98,17 +99,27 @@ end:
 	return 0;
 }
 
-static void print_usage_exit(void)
+static void print_usage_exit(const char *name)
 {
-	// TODO
+	printf("Extract every file from given CP/M disk image.\n"
+	       "\n"
+	       "Usage: %s <options>\n"
+	       "\n"
+	       "Options:\n"
+	       "    -f,--format <format>   Target CP/M format (mandatory)\n"
+	       "    -i,--input <path>      Input image file (mandatory)\n"
+	       "    -h,--help              Displays this message\n",
+	       name);
 	exit(EXIT_FAILURE);
 }
-
 int extract(int argc, char *argv[])
 {
-	const char opts[] = "f:";
+	const char opts[] = "f:i:h";
 	const struct option long_opts[] = {
-		{"format", required_argument, 0, 'f'}, {0, 0, 0, 0}};
+		{"format", required_argument, 0, 'f'},
+		{"input", required_argument, 0, 'i'},
+		{"help", no_argument, 0, 'h'},
+		{0, 0, 0, 0}};
 	char path[1024] = {0};
 	char format[128] = {0};
 	struct disk_definition *def;
@@ -116,23 +127,28 @@ int extract(int argc, char *argv[])
 
 	while ((opt = getopt_long(argc, argv, opts, long_opts, NULL)) != -1) {
 		switch (opt) {
-		case 'f':
-			printf("Format = %s\n", optarg);
-			memcpy(format, optarg, strlen(optarg));
+		case 'i':
+			strncpy(path, optarg, 1024);
 			break;
+		case 'f':
+			strncpy(format, optarg, 128);
+			break;
+		case 'h':
 		default:
-			print_usage_exit();
+			print_usage_exit(argv[0]);
 			break;
 		}
 	}
 
-	if (optind != argc - 1)
-		print_usage_exit();
+	if (!path[0]) {
+		fprintf(stderr, "Missing input file\n");
+		exit(EXIT_FAILURE);
+	}
 
-	memcpy(path, argv[optind], strlen(argv[optind]));
-
-	if (!path[0] || !format[0])
-		print_usage_exit();
+	if (!format[0]) {
+		fprintf(stderr, "Missing format\n");
+		exit(EXIT_FAILURE);
+	}
 
 	def = find_definition(format);
 	if (!def)
@@ -143,6 +159,7 @@ int extract(int argc, char *argv[])
 		return -1;
 	}
 	cpmextract(&micral_p2);
+	destroy_floppy();
 
 	return 0;
 }

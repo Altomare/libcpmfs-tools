@@ -48,7 +48,7 @@ static void print_usage_exit(const char *name)
 	       "\n"
 	       "Options:\n"
 	       "    -f,--format <format>   Target CP/M format (mandatory)\n"
-	       "    -i,--image <path>      Input image file (mandatory)\n"
+	       "    -i,--input <path>      Input image file (mandatory)\n"
 	       "    -o,--output <path>     Output file. Overrides input file by default\n"
 	       "    -h,--help              Displays this message\n",
 	       name);
@@ -60,7 +60,7 @@ int cleanup(int argc, char *argv[])
 	const char opts[] = "f:i:o:h";
 	const struct option long_opts[] = {
 		{"format", required_argument, 0, 'f'},
-		{"image", required_argument, 0, 'i'},
+		{"input", required_argument, 0, 'i'},
 		{"output", required_argument, 0, 'o'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}};
@@ -72,9 +72,6 @@ int cleanup(int argc, char *argv[])
 
 	while ((opt = getopt_long(argc, argv, opts, long_opts, NULL)) != -1) {
 		switch (opt) {
-		case 'h':
-			print_usage_exit(argv[0]);
-			break;
 		case 'i':
 			strncpy(path, optarg, 1024);
 			break;
@@ -82,8 +79,9 @@ int cleanup(int argc, char *argv[])
 			strncpy(output, optarg, 1024);
 			break;
 		case 'f':
-			strncpy(format, optarg, 1024);
+			strncpy(format, optarg, 128);
 			break;
+		case 'h':
 		default:
 			print_usage_exit(argv[0]);
 			break;
@@ -95,7 +93,7 @@ int cleanup(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	if (!format[0]){
+	if (!format[0]) {
 		fprintf(stderr, "Missing format\n");
 		exit(EXIT_FAILURE);
 	}
@@ -116,7 +114,7 @@ int cleanup(int argc, char *argv[])
 
 	wipe_sectors(def);
 
-	save_floppy("toto.imd");
+	save_floppy(output);
 	destroy_floppy();
 
 	return 0;

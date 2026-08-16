@@ -57,7 +57,7 @@ static void print_usage_exit(const char *name)
 	       "\n"
 	       "Options:\n"
 	       "    -f,--format <format>   Target CP/M format (mandatory)\n"
-	       "    -i,--image <path>      Input image file (mandatory)\n"
+	       "    -i,--input <path>      Input image file (mandatory)\n"
 	       "    -h,--help              Displays this message\n",
 	       name);
 	exit(EXIT_FAILURE);
@@ -68,7 +68,7 @@ int ls(int argc, char *argv[])
 	const char opts[] = "f:i:h";
 	const struct option long_opts[] = {
 		{"format", required_argument, 0, 'f'},
-		{"image", required_argument, 0, 'i'},
+		{"input", required_argument, 0, 'i'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}};
 	char path[1024 + 1] = {0};
@@ -82,11 +82,9 @@ int ls(int argc, char *argv[])
 			strncpy(path, optarg, 1024);
 			break;
 		case 'f':
-			strncpy(format, optarg, 1024);
+			strncpy(format, optarg, 128);
 			break;
 		case 'h':
-			print_usage_exit(argv[0]);
-			break;
 		default:
 			print_usage_exit(argv[0]);
 			break;
@@ -98,7 +96,7 @@ int ls(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	if (!format[0]){
+	if (!format[0]) {
 		fprintf(stderr, "Missing format\n");
 		exit(EXIT_FAILURE);
 	}

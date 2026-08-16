@@ -36,20 +36,31 @@ end:
 	return 0;
 }
 
-static void print_usage_exit(void)
+static void print_usage_exit(const char *name)
 {
-	// TODO
+	printf("Delete specified files in given CP/M disk image.\n"
+	       "\n"
+	       "Usage: %s <options>\n"
+	       "\n"
+	       "Options:\n"
+	       "    -f,--format <format>   Target CP/M format (mandatory)\n"
+	       "    -u,--user <number>     User number\n"
+	       "    -i,--input <path>      Input image file (mandatory)\n"
+	       "    -o,--output <path>     Output file. Overrides input file by default\n"
+	       "    -h,--help              Displays this message\n",
+	       name);
 	exit(EXIT_FAILURE);
 }
 
 int rm(int argc, char *argv[])
 {
-	const char opts[] = "f:u:i:o:";
+	const char opts[] = "f:u:i:o:h";
 	const struct option long_opts[] = {
 		{"format", required_argument, 0, 'f'},
 		{"user", required_argument, 0, 'u'},
-		{"image", required_argument, 0, 'i'},
+		{"input", required_argument, 0, 'i'},
 		{"output", required_argument, 0, 'o'},
+		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}};
 	char path[1024 + 1] = {0};
 	char output[1024 + 1] = {0};
@@ -61,29 +72,37 @@ int rm(int argc, char *argv[])
 	while ((opt = getopt_long(argc, argv, opts, long_opts, NULL)) != -1) {
 		switch (opt) {
 		case 'i':
-			printf("File = %s\n", optarg);
 			strncpy(path, optarg, 1024);
 			break;
 		case 'o':
-			printf("File = %s\n", optarg);
 			strncpy(output, optarg, 1024);
 			break;
 		case 'f':
-			printf("Format = %s\n", optarg);
-			strncpy(format, optarg, 1024);
+			strncpy(format, optarg, 128);
 			break;
 		case 'u':
 			user = strtol(optarg, NULL, 10);
-			printf("User = %d\n", user);
 			break;
+		case 'h':
 		default:
-			print_usage_exit();
+			print_usage_exit(argv[0]);
 			break;
 		}
 	}
 
-	if (!path[0] || !format[0] || optind >= argc)
-		print_usage_exit();
+	if (!path[0]) {
+		fprintf(stderr, "Missing input file\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (!format[0]) {
+		fprintf(stderr, "Missing format\n");
+		exit(EXIT_FAILURE);
+	}
+	if (optind == argc) {
+		fprintf(stderr, "Missing files to delete\n");
+		print_usage_exit(argv[0]);
+	}
 
 	if (!output[0])
 		memcpy(output, path, 1024);
@@ -97,8 +116,10 @@ int rm(int argc, char *argv[])
 		return -1;
 	}
 
-	for (; optind < argc; ++optind)
+	for (; optind < argc; ++optind) {
+		printf("Deleting %s (user %d)\n", argv[optind], user);
 		cpmrm(def, argv[optind], user);
+	}
 
 	save_floppy(output);
 	destroy_floppy();
