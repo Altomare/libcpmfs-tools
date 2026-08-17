@@ -15,6 +15,7 @@ CFLAGS := \
 
 TOOLS_SRC := tools/main.c \
 	     tools/disk_definitions.c \
+	     tools/recover.c \
 	     tools/floppy.c \
 	     tools/rm.c \
 	     tools/ls.c \

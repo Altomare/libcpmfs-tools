@@ -39,6 +39,10 @@ static struct command cmds[] = {
 		.name = "cleanup",
 		.func = &cleanup,
 	},
+	{
+		.name = "recover",
+		.func = &recover,
+	},
 };
 
 static void usage(const char *name)
@@ -53,6 +57,7 @@ static void usage(const char *name)
 		"    extract              Extract all files\n"
 		"    rm                   Delete specified files\n"
 		"    cleanup              Cleanup unused sectors\n"
+		"    recover              Print data in unused sectors\n"
 		"    list_formats         List available disk formats\n"
 		"\n"
 		"For more details on a command, run:\n"

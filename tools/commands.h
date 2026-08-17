@@ -7,3 +7,4 @@ int ls(int argc, char *argv[]);
 int extract(int argc, char *argv[]);
 int cleanup(int argc, char *argv[]);
 int rm(int argc, char *argv[]);
+int recover(int argc, char *argv[]);
