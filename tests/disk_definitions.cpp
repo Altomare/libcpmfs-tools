@@ -1,3 +1,5 @@
+/* Copyright (c) 2026 Arthur DAUZAT
+ * SPDX-License-Identifier: BSD-3-Clause */
 
 #include <string>
 

@@ -158,7 +158,7 @@ int extract(int argc, char *argv[])
 		fprintf(stderr, "Fail\n");
 		return -1;
 	}
-	cpmextract(&micral_p2);
+	cpmextract(def);
 	destroy_floppy();
 
 	return 0;
