@@ -29,14 +29,16 @@ static int cpmls(struct disk_definition *def)
 
 	struct cpm_fs_file *cpmfile;
 	cpm_fs_readdir(fs, dirp, &cpmfile);
+	printf("User        Name      Size  Flags\n");
+	printf("---------------------------------\n");
 	while (cpmfile) {
-		printf("%12s [%d][%c%c%c][%u bytes]\n",
-		       cpmfile->d_name,
+		printf("  %2d  %12s  %6u  [%c%c%c]\n",
 		       cpmfile->d_user,
-		       cpmfile->d_flags & CPM_FS_FLAG_SYSTEM ? 'S' : ' ',
-		       cpmfile->d_flags & CPM_FS_FLAG_READONLY ? 'R' : ' ',
-		       cpmfile->d_flags & CPM_FS_FLAG_ARCHIVED ? 'A' : ' ',
-		       cpmfile->d_size);
+		       cpmfile->d_name,
+		       cpmfile->d_size,
+		       cpmfile->d_flags & CPM_FS_FLAG_SYSTEM ? 'S' : '-',
+		       cpmfile->d_flags & CPM_FS_FLAG_READONLY ? 'R' : '-',
+		       cpmfile->d_flags & CPM_FS_FLAG_ARCHIVED ? 'A' : '-');
 		cpm_fs_readdir(fs, dirp, &cpmfile);
 	}
 	cpm_fs_closedir(fs, dirp);
@@ -52,6 +54,7 @@ end:
 static void print_usage_exit(const char *name)
 {
 	printf("List files in given CP/M disk image.\n"
+	       "Flags are 'S' for system, 'R' for read-only, and 'A' for archived.\n"
 	       "\n"
 	       "Usage: %s <options>\n"
 	       "\n"
