@@ -9,8 +9,7 @@
 
 #include "disk_definitions.h"
 
-static uint32_t micral_p2_skew[16] = {1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15, 8, 16};
-struct disk_definition micral_p2 = {
+static struct disk_definition micral_p2 = {
 	.shortname = "micral_p2",
 	.name = "Bull Micral P2",
 	.attrs = {
@@ -20,15 +19,15 @@ struct disk_definition micral_p2 = {
 		.sector_size = 256,
 		.block_size = 2048,
 		.max_dir_entries = 256,
-		.skew_table = micral_p2_skew,
+		.skew_table = NULL,
+		.skew_factor = 2,
 		.boot_cylinders = 3,
 		.fill_order = CPM_FILL_NORMAL,
 	},
 	.encoding = ISOIBM_MFM_ENCODING,
 };
 
-static uint32_t otrona_attache_skew[10] = {1, 6, 2, 7, 3, 8, 4, 9, 5, 10};
-struct disk_definition otrona_attache = {
+static struct disk_definition otrona_attache = {
 	.shortname = "otrona_attache",
 	.name = "Otrona Attache",
 	.attrs = {
@@ -38,15 +37,15 @@ struct disk_definition otrona_attache = {
 		.sector_size = 512,
 		.block_size = 2048,
 		.max_dir_entries = 128,
-		.skew_table = otrona_attache_skew,
+		.skew_table = NULL,
+		.skew_factor = 2,
 		.boot_cylinders = 3,
 		.fill_order = CPM_FILL_HCS,
 	},
 	.encoding = ISOIBM_MFM_ENCODING,
 };
 
-static uint32_t bondwell_12_skew[18] = {1, 10, 2, 11, 3, 12, 4, 13, 5, 14, 6, 15, 7, 16, 8, 17, 9, 18};
-struct disk_definition bondwell_12 = {
+static struct disk_definition bondwell_12 = {
 	.shortname = "bondwell_12",
 	.name = "Bondwell 12",
 	.attrs = {
@@ -56,15 +55,15 @@ struct disk_definition bondwell_12 = {
 		.sector_size = 256,
 		.block_size = 2048,
 		.max_dir_entries = 64,
-		.skew_table = bondwell_12_skew,
+		.skew_table = NULL,
+		.skew_factor = 2,
 		.boot_cylinders = 2,
 		.fill_order = CPM_FILL_NORMAL,
 	},
 	.encoding = ISOIBM_MFM_ENCODING,
 };
 
-static uint32_t osborne_1_skew[10] = {1, 6, 2, 7, 3, 8, 4, 9, 5, 10};
-struct disk_definition osborne_1 = {
+static struct disk_definition osborne_1 = {
 	.shortname = "osborne_1",
 	.name = "Osborne 1",
 	.attrs = {
@@ -74,7 +73,8 @@ struct disk_definition osborne_1 = {
 		.sector_size = 256,
 		.block_size = 2048,
 		.max_dir_entries = 64,
-		.skew_table = osborne_1_skew,
+		.skew_table = NULL,
+		.skew_factor = 2,
 		.boot_cylinders = 3,
 		.fill_order = CPM_FILL_NORMAL,
 	},
@@ -82,7 +82,7 @@ struct disk_definition osborne_1 = {
 };
 
 static uint32_t epson_qx10_skew[10] = {1, 8, 5, 2, 9, 6, 3, 10, 7, 4};
-struct disk_definition epson_qx10 = {
+static struct disk_definition epson_qx10 = {
 	.shortname = "epson_qx10",
 	.name = "Epson QX10",
 	.attrs = {
@@ -93,14 +93,14 @@ struct disk_definition epson_qx10 = {
 		.block_size = 2048,
 		.max_dir_entries = 128,
 		.skew_table = epson_qx10_skew,
+		.skew_factor = 0,
 		.boot_cylinders = 4,
 		.fill_order = CPM_FILL_NORMAL,
 	},
 	.encoding = ISOIBM_MFM_ENCODING,
 };
 
-static uint32_t sanco_8003_skew[5] = {1, 4, 2, 5, 3};
-struct disk_definition sanco_8003 = {
+static struct disk_definition sanco_8003 = {
 	.shortname = "sanco_8003",
 	.name = "Sanco 8003",
 	.attrs = {
@@ -110,13 +110,85 @@ struct disk_definition sanco_8003 = {
 		.sector_size = 1024,
 		.block_size = 4096,
 		.max_dir_entries = 128,
-		.skew_table = sanco_8003_skew,
+		.skew_table = NULL,
+		.skew_factor = 2,
 		.boot_cylinders = 2,
 		.fill_order = CPM_FILL_NORMAL,
 	},
 	.encoding = ISOIBM_MFM_ENCODING,
 };
 
+static struct disk_definition osborne_4 = {
+	.shortname = "osborne_4",
+	.name = "Osborne Vixen",
+	.attrs = {
+		.cylinders = 40,
+		.heads = 2,
+		.sector_count = 5,
+		.sector_size = 1024,
+		.block_size = 2048,
+		.max_dir_entries = 128,
+		.skew_table = NULL,
+		.skew_factor = 2,
+		.boot_cylinders = 2,
+		.fill_order = CPM_FILL_NORMAL,
+	},
+	.encoding = ISOIBM_MFM_ENCODING,
+};
+
+static struct disk_definition mai_basic4 = {
+	.shortname = "mai_basic4",
+	.name = "MAI Basic 4",
+	.attrs = {
+		.cylinders = 80,
+		.heads = 2,
+		.sector_count = 16,
+		.sector_size = 256,
+		.block_size = 2048,
+		.max_dir_entries = 128,
+		.skew_table = NULL,
+		.skew_factor = 0,
+		.boot_cylinders = 3,
+		.fill_order = CPM_FILL_NORMAL,
+	},
+	.encoding = ISOIBM_MFM_ENCODING,
+};
+
+static struct disk_definition zorba = {
+	.shortname = "zorba",
+	.name = "Zorba",
+	.attrs = {
+		.cylinders = 40,
+		.heads = 2,
+		.sector_count = 10,
+		.sector_size = 512,
+		.block_size = 2048,
+		.max_dir_entries = 64,
+		.skew_table = NULL,
+		.skew_factor = 0,
+		.boot_cylinders = 2,
+		.fill_order = CPM_FILL_NORMAL,
+	},
+	.encoding = ISOIBM_MFM_ENCODING,
+};
+
+static struct disk_definition ns_advantage = {
+	.shortname = "ns_advantage",
+	.name = "Northstar Advantage",
+	.attrs = {
+		.cylinders = 35,
+		.heads = 1,
+		.sector_count = 10,
+		.sector_size = 512,
+		.block_size = 2048,
+		.max_dir_entries = 64,
+		.skew_table = NULL,
+		.skew_factor = 0,
+		.boot_cylinders = 2,
+		.fill_order = CPM_FILL_NORMAL,
+	},
+	.encoding = NORTHSTAR_HS_MFM_ENCODING,
+};
 
 static struct disk_definition *defs[] = {
 	&bondwell_12,
@@ -125,6 +197,10 @@ static struct disk_definition *defs[] = {
 	&osborne_1,
 	&otrona_attache,
 	&sanco_8003,
+	&osborne_4,
+	&mai_basic4,
+	&zorba,
+	&ns_advantage,
 };
 
 struct disk_definition *find_definition(const char *name)
