@@ -34,7 +34,8 @@ targets.
 ### Linux
 
 ```bash
-git submodule update
+git submodule update --init
+(cd hxc/build && make)
 make
 ```
 
