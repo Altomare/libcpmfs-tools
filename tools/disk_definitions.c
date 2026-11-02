@@ -9,6 +9,26 @@
 
 #include "disk_definitions.h"
 
+//static uint32_t welect_w80_skew[26] = {1, 7, 13, 19, 25, 5, 11, 17, 23, 3, 9, 15, 21, 1, 7, 13, 19, 25, 5, 11, 17, 23, 3, 9, 15, 21};
+static uint32_t welect_w80_skew[26] = {1, 14, 10, 23, 6, 19, 2, 15, 11, 24, 7, 20, 3, 16, 12, 25, 8, 21, 4, 17, 13, 26, 9, 22, 5, 18};
+static struct disk_definition welect_w80 = {
+	.shortname = "welect_w80",
+	.name = "Welect W80.2",
+	.attrs = {
+		.cylinders = 77,
+		.heads = 2,
+		.sector_count = 26,
+		.sector_size = 256,
+		.block_size = 2048,
+		.max_dir_entries = 256,
+		.skew_table = welect_w80_skew,
+		.skew_factor = 0,
+		.boot_cylinders = 2,
+		.fill_order = CPM_FILL_HCS,
+	},
+	.encoding = ISOIBM_MFM_ENCODING,
+};
+
 static struct disk_definition micral_p2 = {
 	.shortname = "micral_p2",
 	.name = "Bull Micral P2",
@@ -193,6 +213,7 @@ static struct disk_definition ns_advantage = {
 static struct disk_definition *defs[] = {
 	&bondwell_12,
 	&epson_qx10,
+	&welect_w80,
 	&micral_p2,
 	&osborne_1,
 	&otrona_attache,

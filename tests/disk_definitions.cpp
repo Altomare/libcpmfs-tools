@@ -5,6 +5,27 @@
 
 #include "disk_definitions.hh"
 
+/* Welect W80-2, CP/M 3.1,
+ * First 2 tracks of side 0 are reserved for CP/M.
+ * Disk is filled head by head instead of track by track. */
+static uint32_t welect_w80_skew[26] = {1, 14, 10, 23, 6, 19, 2, 15, 11, 24, 7, 20, 3, 16, 12, 25, 8, 21, 4, 17, 13, 26, 9, 22, 5, 18};
+DiskSettings WelectW80(
+  "Welect_W80",
+  {
+    .cylinders = 77,
+    .heads = 2,
+    .sector_count = 26,
+    .sector_size = 256,
+    .block_size = 2048,
+    .max_dir_entries = 256,
+    .skew_table = welect_w80_skew,
+    .skew_factor = 0,
+    .boot_cylinders = 2,
+    .fill_order = CPM_FILL_HCS,
+  },
+  "disks/welect_w80.hfe",
+  ISOIBM_MFM_ENCODING);
+
 /* Otrona Attaché, CP/M 2.2, default configuration with 48 TPI drives.
  * First 3 tracks of side 0 are reserved for CP/M.
  * Disk is filled head by head instead of track by track. */

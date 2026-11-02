@@ -17,6 +17,7 @@ Below is a list of CP/M disk images with their settings and where I got them fro
 | Amstrad CPC6128   | 3"    |      |          |                  |
 | Pertec PCC-2000   | 8"    |      |          |                  |
 | XOR Data Science  | 8"    |      |          |                  |
+| Welect W80-2      | 8"    | 3.0  |          | CC-IN2P3         | https://musee.cc.in2p3.fr/hotspots/Ogip_Welect_W80/
 | Vector graphics?
 | Research Machines 380Z?
 | Heath H89/Zenith Z89

@@ -21,6 +21,7 @@ public:
 };
 
 extern DiskSettings OtronaAttache;
+extern DiskSettings WelectW80;
 extern DiskSettings Bondwell12;
 extern DiskSettings Osborne1;
 extern DiskSettings EpsonQX10;
